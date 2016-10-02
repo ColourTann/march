@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello phaser!</title>
+        <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        //  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
+        //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
+        //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
+
+        var game = new Phaser.Game(800, 600, Phaser.CANBAS, '', { preload: preload, create: create, update: update });
+        var ticks = 0;
+        function preload () {
+
+            
+            game.load.image('tile', 'assets/tile.png')
+
+        }
+
+        var tiles = []
+        function create () {
+            var tilesAcross = 6;
+            var tilesDown = 6;
+            console.log(game.width);
+            var tileSize = game.width/tilesAcross;
+            for(var x=0; x<tilesAcross; x++){
+                for(var y=0; y<tilesDown; y++){
+                    var tileSprite = game.add.sprite(x*tileSize, y*tileSize, 'tile');
+                    tileSprite.width = tileSize;
+                    tileSprite.height = tileSize;
+                    var tileObject = []
+                    tileObject.offset = game.rnd.realInRange(0, 6.28)
+                    tileObject.speed = game.rnd.realInRange(0, 6.28)
+                    tileObject.mag = game.rnd.realInRange(0, 1.108)
+                    tileObject.sprite = tileSprite;
+                    tiles.push(tileObject);
+                }    
+            }
+        }
+
+        function updateTile(tile){
+            tile.sprite.x+= Math.sin(ticks*tile.speed+tile.offset)*tile.mag;
+            tile.sprite.y+= Math.cos(ticks*tile.speed+tile.offset)*tile.mag;
+        }
+
+        function update(){
+            ticks += .1;
+            for(var i=0; i<tiles.length; i++){
+                updateTile(tiles[i]);
+            }
+        }
+
+    };
+
+    </script>
+
+    </body>
+</html>
