@@ -3,11 +3,17 @@
     <head>
         <meta charset="UTF-8" />
         <title>hello phaser!</title>
-        <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+        <script src="js/phaser.min.js"></script>
+        <script src="js/globals.js"></script>
+        <script src="js/tile.js"></script>
+        <script src="js/grid.js"></script>
+        <script src="js/card.js"></script>
+        <script src="js/hand.js"></script>
     </head>
     <body>
 
     <script type="text/javascript">
+    "use strict";
 
     window.onload = function() {
 
@@ -15,46 +21,34 @@
         //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
         //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
 
-        var game = new Phaser.Game(800, 600, Phaser.CANBAS, '', { preload: preload, create: create, update: update });
-        var ticks = 0;
+        GAME = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
+        
         function preload () {
 
             
-            game.load.image('tile', 'assets/tile.png')
+            GAME.load.image('tile', 'assets/tile.png')
+           
+            GAME.load.image('card', 'assets/card.png')
+            GAME.load.image('bow', 'assets/bow.png')
+            GAME.load.image('sword', 'assets/sword.png')
+            GAME.load.image('scimitar', 'assets/scimitar.png')
 
         }
-
-        var tiles = []
+        var cards = [];
         function create () {
-            var tilesAcross = 6;
-            var tilesDown = 6;
-            console.log(game.width);
-            var tileSize = game.width/tilesAcross;
-            for(var x=0; x<tilesAcross; x++){
-                for(var y=0; y<tilesDown; y++){
-                    var tileSprite = game.add.sprite(x*tileSize, y*tileSize, 'tile');
-                    tileSprite.width = tileSize;
-                    tileSprite.height = tileSize;
-                    var tileObject = []
-                    tileObject.offset = game.rnd.realInRange(0, 6.28)
-                    tileObject.speed = game.rnd.realInRange(0, 6.28)
-                    tileObject.mag = game.rnd.realInRange(0, 1.108)
-                    tileObject.sprite = tileSprite;
-                    tiles.push(tileObject);
-                }    
-            }
-        }
+            GAME.stage.backgroundColor = "#2d1e2a";
+            GRID = new Grid();
+            HAND = new Hand();
+            var xGap = (DIMENSIONS.width - HAND.width - GRID.width )/3;
+            GRID.group.x=xGap;
+            HAND.group.x=xGap*2+GRID.width; 
 
-        function updateTile(tile){
-            tile.sprite.x+= Math.sin(ticks*tile.speed+tile.offset)*tile.mag;
-            tile.sprite.y+= Math.cos(ticks*tile.speed+tile.offset)*tile.mag;
+            GRID.group.y=(DIMENSIONS.height-GRID.height)/2;
+            HAND.group.y=(DIMENSIONS.height-HAND.height)/2;
         }
 
         function update(){
-            ticks += .1;
-            for(var i=0; i<tiles.length; i++){
-                updateTile(tiles[i]);
-            }
+
         }
 
     };
